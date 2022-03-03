@@ -1,9 +1,11 @@
 <template>
-  <div class="project" :class="{complete: project.complete}">
+  <div class="project" :class="{ complete: project.complete }">
     <div class="actions">
       <h3 @click="showDetails = !showDetails">{{ project.title }}</h3>
       <div class="icons">
-        <span class="material-icons"> edit </span>
+        <router-link :to="{name: 'EditProject', params: {id: project.id}}">
+          <span class="material-icons"> edit </span>
+        </router-link>
         <span class="material-icons" @click="deleteProject"> delete </span>
         <span @click="toggleComplete" class="material-icons tick"> done </span>
       </div>
@@ -29,17 +31,19 @@ export default {
         .then(() => this.$emit("delete", this.project.id))
         .catch((err) => console.log(err));
     },
-    toggleComplete(){
+    toggleComplete() {
       fetch(this.uri, {
         method: "PATCH",
         // we're sending some data with this request it it's gonna be of type json
-        headers: { 'Content-Type': 'application/json'},
+        headers: { "Content-Type": "application/json" },
         //send the actual data, send the object with only the updated properties
-        body: JSON.stringify({ complete: !this.project.complete})
-        }).then(() => {
-          this.$emit('complete', this.project.id)
-        }).catch(err => console.log(err))
-    }
+        body: JSON.stringify({ complete: !this.project.complete }),
+      })
+        .then(() => {
+          this.$emit("complete", this.project.id);
+        })
+        .catch((err) => console.log(err));
+    },
   },
 };
 </script>
